@@ -20,18 +20,19 @@ const notificationSchema = new mongoose.Schema({
 
 const Notification = mongoose.model('Notification', notificationSchema);
 app.post('/checkMessageExists', async (req, res) => {
-    const { message } = req.body;
+    const { message, sender, dateTime } = req.body;
 
-    // Verificar si se está recibiendo el mensaje correctamente
-    console.log("Mensaje recibido:", message);
+    // Verificar si se están recibiendo correctamente los datos
+    console.log("Datos recibidos - Mensaje:", message, "Remitente:", sender, "Fecha/Hora:", dateTime);
 
-    if (!message) {
-        return res.status(400).json({ error: "No se ha proporcionado ningún mensaje" });
+    // Validar si los datos obligatorios están presentes
+    if (!message || !sender || !dateTime) {
+        return res.status(400).json({ error: "No se han proporcionado todos los campos necesarios: mensaje, remitente, fecha/hora" });
     }
 
     try {
-        // Intentar buscar la existencia del mensaje en la base de datos
-        const exists = await Notification.exists({ message: message });
+        // Intentar buscar si existe una entrada con el mismo mensaje, remitente y fecha/hora
+        const exists = await Notification.exists({ message: message, sender: sender, dateTime: dateTime });
 
         console.log("Resultado de la consulta:", exists);
 
