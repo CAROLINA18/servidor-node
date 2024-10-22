@@ -1,10 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const environment = require('./environment'); // Asegúrate de que la ruta sea correcta
 const app = express();
 app.use(express.json());
 
 // Conectar a MongoDB
-mongoose.connect('mongodb://localhost:27017/notificaciones')
+console.log(`Servidor  ${environment.Conexion_Datos}`);
+mongoose.connect(environment.Conexion_Datos)
     .then(() => console.info('Conexión a MongoDB establecida correctamente'))
     .catch(err => console.error('Error al conectar a MongoDB:', err));
 
@@ -52,6 +54,6 @@ app.post('/saveNotification', (req, res) => {
 });
 
 // Iniciar el servidor en el puerto 3000
-app.listen(3000, '0.0.0.0', () => {
-    console.log('Servidor escuchando en el puerto 3000');
+app.listen(environment.Port, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en el puerto ${environment.Port}`);
   });
